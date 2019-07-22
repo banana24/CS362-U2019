@@ -12,7 +12,7 @@ void drawMultCards(int player, int numcards, struct gameState* state);
 void discardHand(int player,int handPos, struct gameState* state);
 int Ambassador(int choice1, int choice2, struct gameState *state, int handPos, int currentPlayer);
 int Tribute(int currentPlayer, int nextPlayer, int tributeRevealedCards[], struct gameState *state, int handPos);
-int Mine(int choice1, int choice2, int currentPlayer, struct gameState *state, int handPos, int bug_abuse);
+int Mine(int choice1, int choice2, int currentPlayer, struct gameState *state, int handPos);
 
 int compare(const void* a, const void* b) {
   if (*(int*)a > *(int*)b)
@@ -661,7 +661,6 @@ int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState
   int index;
   int currentPlayer = whoseTurn(state);
   int nextPlayer = currentPlayer + 1;
-  int bug_abuse = 0;
 
   int tributeRevealedCards[2] = {-1, -1};
   int temphand[MAX_HAND];// moved above the if statement
@@ -778,7 +777,7 @@ int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState
       return -1;
 			
     case mine:
-      Mine(choice1, choice2, currentPlayer, state, handPos, bug_abuse);
+      Mine(choice1, choice2, currentPlayer, state, handPos);
 
     case remodel:
       j = state->hand[currentPlayer][choice1];  //store card we will trash
@@ -1328,7 +1327,7 @@ int Tribute(int currentPlayer, int nextPlayer, int tributeRevealedCards[], struc
    return 0;
 }
 
-int Mine(int choice1, int choice2, int currentPlayer, struct gameState *state, int handPos, int bug_abuse){
+int Mine(int choice1, int choice2, int currentPlayer, struct gameState *state, int handPos){
    int i, j;
    
 
@@ -1349,12 +1348,6 @@ int Mine(int choice1, int choice2, int currentPlayer, struct gameState *state, i
    //discard card from hand
    discardCard(handPos+5 , currentPlayer, state, 0); //Introduced bug to discard an unintended card from the players hand
 
-
-   if(bug_abuse > 2){
-      discardHand(currentPlayer, handPos, state); 
-      bug_abuse ++;
-      return bug_abuse;
-   }
 
    //discard trashed card
    for (i = 0; i < state->handCount[currentPlayer]; i++)
