@@ -54,6 +54,15 @@ cardtest4: cardtest4.c dominion.o rngs.o
 cardtest5: cardtest5.c dominion.o rngs.o
 	gcc -o cardtest5 -g  cardtest5.c dominion.o rngs.o $(CFLAGS)
 
+randomtestcard1: randomtestcard1.c dominion.o rngs.o 
+	gcc -o randomtestcard1 -g  randomtestcard1.c dominion.o rngs.o $(CFLAGS)
+
+randomtestcard2: randomtestcard2.c dominion.o rngs.o 
+	gcc -o randomtestcard2 -g  randomtestcard2.c dominion.o rngs.o $(CFLAGS)
+
+randomtestcard3: randomtestcard3.c dominion.o rngs.o 
+	gcc -o randomtestcard3 -g  randomtestcard3.c dominion.o rngs.o $(CFLAGS)
+
 testAll: dominion.o testSuite.c
 	gcc -o testSuite testSuite.c -g  dominion.o rngs.o $(CFLAGS)
 
@@ -68,6 +77,11 @@ alltests: unittest1.c unittest2.c unittest3.c unittest4.c unittest5.c  cardtest1
 	gcc -o cardtest3 -g  cardtest3.c dominion.o rngs.o $(CFLAGS)
 	gcc -o cardtest4 -g  cardtest4.c dominion.o rngs.o $(CFLAGS)
 	gcc -o cardtest5 -g  cardtest5.c dominion.o rngs.o $(CFLAGS)
+
+allRandom: randomtestcard1.c randomtestcard2.c randomtestcard3.c dominion.o rngs.o
+	gcc -o randomtestcard1 -g randomtestcard1.c dominion.o rngs.o $(CFLAGS)
+	gcc -o randomtestcard2 -g randomtestcard2.c dominion.o rngs.o $(CFLAGS)
+	gcc -o randomtestcard3 -g randomtestcard3.c dominion.o rngs.o $(CFLAGS)
 
 interface.o: interface.h interface.c
 	gcc -c interface.c -g  $(CFLAGS)
@@ -137,6 +151,21 @@ test10: cardtest5
 	gcov dominion.c >> unittestresult1.out
 	cat dominion.c.gcov >> unittestresult1.out
 
+randomtest1: randomtestcard1
+	./randomtestcard1   
+	gcov dominion.c >> randomtestresults.out
+	cat dominion.c.gcov >> randomtestresults.out
+
+randomtest2: randomtestcard2
+	./randomtestcard2 
+	gcov dominion.c >> randomtestresults.out
+	cat dominion.c.gcov >> randomtestresults.out
+
+randomtest3: randomtestcard3
+	./randomtestcard3 >> junk.out  
+	gcov dominion.c -b -c>> randomtestresults.out
+	cat dominion.c.gcov >> randomtestresults.out
+
 unittestresults: alltests
 	./unittest1 >> unittestresults.out
 	./unittest2 >> unittestresults.out	
@@ -149,6 +178,12 @@ unittestresults: alltests
 	./cardtest4 >> unittestresults.out
 	./cardtest5 >> unittestresults.out
 	gcov dominion.c -b -f >> unittestresults.out
+
+randomtestresults: allRandom
+	./randomtestcard1 >> debug.out
+	./randomtestcard2 >> debug.out
+	./randomtestcard3 >> debug.out
+	gcov dominion.c -b -f >> randomtestresults.out
 
 player: player.c interface.o
 	gcc -o player player.c -g  dominion.o rngs.o interface.o $(CFLAGS)
